@@ -1,12 +1,3 @@
-```
-cd ~/DevOps-task-tracker
-mkdir -p .github/workflows
-nano .github/workflows/ci.yml
-```
-
-**2\. Paste only this YAML into the file.** Keep the spacing exactly as shown; use spaces, not tabs.
-
-```
 name: App tests
 
 on: [push, pull_request]
@@ -32,4 +23,3 @@ jobs:
 
       - name: Run tests
         run: python -m pytest -q
-```
