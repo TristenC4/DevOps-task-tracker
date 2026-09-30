@@ -1,4 +1,4 @@
-name: App tests
+name: Test, build, and publish
 
 on: [push, pull_request]
 
@@ -26,3 +26,35 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t devops-task-tracker .
+
+  publish:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and publish image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/tristenc4/devops-task-tracker:latest
+            ghcr.io/tristenc4/devops-task-tracker:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/TristenC4/DevOps-task-tracker
+
