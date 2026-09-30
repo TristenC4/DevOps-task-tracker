@@ -25,4 +25,4 @@ jobs:
         run: python -m pytest -q
 
       - name: Build Docker image
-        run: docker build -t devops-task-tracker
+        run: docker build -t devops-task-tracker .
